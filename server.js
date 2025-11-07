@@ -2,9 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path'); // Ajout du module path
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware pour gérer les requêtes CORS
 app.use(cors());
@@ -13,7 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Configuration de la connexion à MongoDB
-//mongoose.connect('mongodb://127.0.0.1:27017/deplacements', {
+//mongoose.connect('mongodb://127.0.0.1:27017/deplacements', {  // à decommenter pour test local
   //useNewUrlParser: true,
   //useUnifiedTopology: true
 //})
@@ -65,6 +66,14 @@ app.get('/api/deplacements', async (req, res) => {
     console.error(error);
     res.status(500).send({ message: 'Erreur lors de la récupération des déplacements' });
   }
+});
+
+// Servir les fichiers statiques depuis le dossier "public"
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Route pour la racine de l'application
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); // ou 'index.html' si c'est votre fichier principal
 });
 
 app.listen(port, () => {
