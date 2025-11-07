@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Principal - Gestion des Déplacements ACF</title>
+    <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: rgb(82, 174, 50);
+            text-align: center;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .navigation button {
+            background-color: rgb(82, 174, 50);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .navigation button:hover {
+            background-color: #3e8e41;
+        }
+
+        .tableau-de-bord {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .section {
+            width: 48%; /* Ajustez selon vos besoins */
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+
+        .section h2 {
+            color: rgb(82, 174, 50);
+            margin-top: 0;
+        }
+
+        /* Styles pour le calendrier hebdomadaire */
+        .calendrier {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .jour {
+            border: 1px solid #eee;
+            padding: 5px;
+            height: 100px;
+            position: relative;
+        }
+
+        .trajet {
+            background-color: #d4edda; /* Vert clair */
+            border: 1px solid #c3e6cb;
+            padding: 3px;
+            margin-bottom: 3px;
+            font-size: 0.8em;
+            position: relative;
+        }
+
+        .trajet span {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 0.7em;
+            background-color: #c3e6cb;
+            padding: 2px;
+        }
+
+        .planning {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tableau de Bord Principal - Gestion des Déplacements ACF</h1>
+
+        <div class="navigation">
+            <button onclick="window.location.href='parametres.html'">Paramètres</button>
+            <button onclick="window.location.href='Needs.html'">Demande de Déplacement</button>
+            <button onclick="window.location.href='consolidation.html'">Consolidation des Mouvements</button>
+            <button onclick="window.location.href='all.html'">All</button>
+        </div>
+
+        <div class="tableau-de-bord">
+            <div class="section">
+                <h2>Planning des Déplacements</h2>
+                <div class="calendrier">
+                    <div class="jour">Lundi</div>
+                    <div class="jour" id="mardi">Mardi
+                       
+                    </div>
+                    <div class="jour">Mercredi</div>
+                    <div class="jour">Jeudi</div>
+                    <div class="jour">Vendredi</div>
+                    <div class="jour">Samedi</div>
+                    <div class="jour">Dimanche</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Statistiques</h2>
+                <p>Nombre total de déplacements: 50</p>
+                <p>Distance totale parcourue: 12 000 km</p>
+                <p>Consommation moyenne: 8.5 L/100km</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function afficherDeplacement() {
+    try {
+        const response = await fetch('http://localhost:3000/api/deplacements');
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        const deplacements = await response.json();
+
+        // Pour simplifier, on affiche le dernier déplacement
+        if (deplacements.length > 0) {
+            const deplacement = deplacements[deplacements.length - 1];
+
+            const trajetContent = `
+                <div class="trajet">
+                    ${deplacement.lieuDepart} -> ${deplacement.lieuArrivee} <br>
+                    ${deplacement.heureDepart}
+                    <span>Validé</span>
+                </div>
+            `;
+            const mardi = document.getElementById("mardi");
+            mardi.innerHTML = trajetContent;
+        } else {
+            document.getElementById("mardi").textContent = "Aucun déplacement enregistré.";
+        }
+    } catch (error) {
+        console.error("Erreur lors de la récupération des déplacements :", error);
+        document.getElementById("mardi").textContent = "Erreur lors du chargement des déplacements.";
+    }
+}
+
+// Appeler la fonction pour afficher les données au chargement de la page
+window.onload = afficherDeplacement;
+    </script>
+</body>
+</html>
