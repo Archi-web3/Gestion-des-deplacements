@@ -13,9 +13,18 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Configuration de la connexion à MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/deplacements', {
+//mongoose.connect('mongodb://127.0.0.1:27017/deplacements', {
+  //useNewUrlParser: true,
+  //useUnifiedTopology: true
+//})
+//.then(() => console.log('Connecté à MongoDB'))
+//.catch(err => console.error('Erreur de connexion à MongoDB:', err));
+
+// Configuration de la connexion à MongoDB
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/deplacements'; // Utiliser la variable d'environnement ou une valeur par défaut
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 })
 .then(() => console.log('Connecté à MongoDB'))
 .catch(err => console.error('Erreur de connexion à MongoDB:', err));
