@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path'); // Ajout du module path
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,15 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Configuration de la connexion à MongoDB
-//mongoose.connect('mongodb://127.0.0.1:27017/deplacements', {  // à decommenter pour test local
-  //useNewUrlParser: true,
-  //useUnifiedTopology: true
-//})
-//.then(() => console.log('Connecté à MongoDB'))
-//.catch(err => console.error('Erreur de connexion à MongoDB:', err));
-
-// Configuration de la connexion à MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/deplacements'; // Utiliser la variable d'environnement ou une valeur par défaut
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/deplacements';
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -68,12 +60,12 @@ app.get('/api/deplacements', async (req, res) => {
   }
 });
 
-// Servir les fichiers statiques depuis le dossier "public"
-app.use(express.static(path.join(__dirname, 'public')));
+// Servir les fichiers statiques directement à la racine
+app.use(express.static(path.join(__dirname)));
 
 // Route pour la racine de l'application
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html')); // ou 'index.html' si c'est votre fichier principal
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(port, () => {
