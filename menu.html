@@ -2,12 +2,11 @@
 <html lang="fr">
 <head>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de Bord Principal - Gestion des Déplacements ACF</title>
     <style>
-          body {
+        body {
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f4f4f4;
@@ -161,7 +160,7 @@
     <script>
         async function afficherDeplacement() {
     try {
-        const response = await fetch('http://localhost:3000/api/deplacements');
+        const response = await fetch('/api/deplacements');
         if (!response.ok) {
             throw new Error(`Erreur HTTP: ${response.status}`);
         }
